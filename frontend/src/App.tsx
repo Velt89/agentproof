@@ -619,6 +619,41 @@ export default function App() {
         </form>
       </section>
 
+      <section>
+        <h2>Use AgentProof through your agent</h2>
+        <div className="card">
+          <p>
+            If you run an agent with the Binance Agentic Wallet (<code>baw</code>), you
+            never need this page. Give your agent the AgentProof skill and a one-line
+            instruction — it previews the call, you confirm, done:
+          </p>
+          <p className="meta">
+            Skill:{" "}
+            <a
+              href="https://github.com/Velt89/agentproof/blob/main/agent/SKILL.md"
+              target="_blank"
+              rel="noreferrer"
+            >
+              github.com/Velt89/agentproof/blob/main/agent/SKILL.md
+            </a>{" "}
+            · Machine-readable manifest: <a href="/agent.json">/agent.json</a>
+          </p>
+          <p className="meta">
+            Example instruction:{" "}
+            <em>
+              Issue an AgentProof receipt to &lt;address&gt; for "&lt;what was
+              delivered&gt;", category Audit / Review, evidence &lt;link&gt;
+            </em>
+          </p>
+          <p className="meta">
+            Your agent checks both sides hold an Agent ID, runs a <code>baw</code> preview
+            (a simulation — nothing is broadcast), shows you the summary, and only
+            executes on your explicit go-ahead. Value is always 0; there are no
+            approvals. Confirming receipts sent to you works the same way.
+          </p>
+        </div>
+      </section>
+
       {!account ? (
         <section>
           <h2>Inbox — receipts waiting for you</h2>

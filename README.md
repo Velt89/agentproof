@@ -36,6 +36,39 @@ Registry interface was verified live before coding — see [NOTES.md](NOTES.md)
 (Sourcify exact_match; `balanceOf`, `handleOf`, `ownerOf`, `name`, `symbol` confirmed;
 live reads for the reference wallet recorded).
 
+## Agent interface (BAW) — the primary path for agent-native users
+
+Agent ID holders are, by definition, people running agents with a Binance
+Agentic Wallet — so AgentProof's primary interface is not this web page, it's
+the user's own agent. With the AgentProof skill, an agent uses AgentProof
+through the user's paired `baw` wallet: **no wallet browser, no website
+login, no QR/pairing-code web flow** (pairing lives in the user's Binance
+App, exactly as in Binance's official agentic-wallet skill).
+
+- **Skill:** [agent/SKILL.md](agent/SKILL.md) — give it to your agent, then
+  just say e.g. *"Issue an AgentProof receipt to 0x… for delivering the audit,
+  category Audit/Review, evidence <link>"* or *"Confirm receipt #3 for me."*
+- **Helper CLI:** [agent/agentproof.js](agent/agentproof.js) — read commands
+  (`status`, `reputation`, `feed`) over plain RPC, plus two-phase writes
+  (`preview-issue` / `preview-confirm` / `preview-cancel`, then `execute`).
+  See [agent/README.md](agent/README.md) for the quickstart and flow diagram.
+- **Manifest:** `frontend/public/agent.json`, served by the dApp at
+  `/agent.json` — machine-readable contract/registry addresses, ABI + skill
+  URLs, `baw` command templates, categories and safety rules.
+
+The write flow is preview-first, always: the agent runs
+`baw contract-call preview` (a simulation — nothing broadcasts, no app
+notification is created), shows the user the decoded summary (from / to /
+function + args / **value 0** / risks must be none / allowance and authority
+changes must be empty), and runs `execute` only on the user's explicit
+go-ahead for that specific preview. Stale previews are re-previewed, never
+executed. The script also refuses locally — before ever calling `baw` — when
+the recipient holds no Agent ID, on self-issue, or when a confirm/cancel
+targets a receipt that isn't pending or isn't the caller's to act on.
+
+The web dApp remains for judges, manual users, and anyone who prefers a
+browser; both paths hit the same contract with the same rules.
+
 ## Architecture
 
 ```
@@ -47,6 +80,8 @@ test/
 scripts/
   check-registry.js — read-only live registry verification (no keys, no writes).
 frontend/           — Vite + React + TypeScript, viem + injected wallet (no wagmi).
+agent/              — agent interface: SKILL.md + agentproof.js (baw preview-first
+                      writes, RPC reads) + README. See "Agent interface (BAW)" above.
 ```
 
 Contract design notes:
