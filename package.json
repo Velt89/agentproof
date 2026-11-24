@@ -1,0 +1,16 @@
+{
+  "name": "agentproof",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AgentProof — on-chain work receipts for Agent ID holders (Binance Wallet Agent ID Hackathon)",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "check-registry": "node scripts/check-registry.js"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "ethers": "^6.13.0",
+    "hardhat": "^2.22.0"
+  }
+}
